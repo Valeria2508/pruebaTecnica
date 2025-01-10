@@ -1,37 +1,38 @@
 <!-- resources/views/gastos/create.blade.php -->
 
-@extends('layouts.app')  <!-- Extiende de un layout principal -->
+@extends('layouts.app')
 
-@section('content')  <!-- Define el contenido de esta sección -->
-
-<div class="container">
-    <h2>Registrar un nuevo gasto</h2>
+@section('content')
+    <h1>Crear Gasto</h1>
 
     <form action="{{ route('gastos.store') }}" method="POST">
-        @csrf  <!-- Esto genera un token CSRF para proteger el formulario -->
-        
+        @csrf
+
         <div class="form-group">
             <label for="descripcion">Descripción</label>
-            <input type="text" name="descripcion" class="form-control" value="{{ old('descripcion') }}" required>
+            <input type="text" class="form-control" id="descripcion" name="descripcion" required>
         </div>
-        
+
         <div class="form-group">
             <label for="monto">Monto</label>
-            <input type="number" name="monto" class="form-control" value="{{ old('monto') }}" required>
+            <input type="number" step="0.01" class="form-control" id="monto" name="monto" required>
         </div>
-        
+
         <div class="form-group">
             <label for="categoria">Categoría</label>
-            <input type="text" name="categoria" class="form-control" value="{{ old('categoria') }}" required>
+            <select class="form-control" id="categoria" name="categoria" required>
+                <option value="Comida">Comida</option>
+                <option value="Transporte">Transporte</option>
+                <option value="Ocio">Ocio</option>
+                <!-- Puedes agregar más categorías aquí -->
+            </select>
         </div>
-        
+
         <div class="form-group">
             <label for="fecha">Fecha</label>
-            <input type="date" name="fecha" class="form-control" value="{{ old('fecha') }}" required>
+            <input type="date" class="form-control" id="fecha" name="fecha" required>
         </div>
-        
-        <button type="submit" class="btn btn-primary mt-3">Registrar gasto</button>
-    </form>
-</div>
 
-@endsection  <!-- Cierra la sección de contenido -->
+        <button type="submit" class="btn btn-primary">Guardar Gasto</button>
+    </form>
+@endsection
