@@ -9,5 +9,4 @@ Route::get('/', [GastoController::class, 'index']);  // Redirige al index de los
 // Rutas para el controlador de gastos (CRUD completo)
 Route::resource('gastos', GastoController::class);
 
-// Ruta de filtrado, para filtrar los gastos por categoría o rango de fechas
-Route::get('gastos/filter', [GastoController::class, 'filter'])->name('gastos.filter');
+

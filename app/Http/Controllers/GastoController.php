@@ -3,14 +3,20 @@
 namespace App\Http\Controllers;
 
 use App\Models\Gasto;
+use App\Models\Categoria;
 use Illuminate\Http\Request;
+
 
 class GastoController extends Controller
 {
     //muestra el formulario para crear los gastos
     public function create()
     {
-        return view('gastos.create');//// Devuelve la vista del formulario de creación
+        // Obtiene todas las categorías de la base de datos
+        $categorias = Categoria::all(); 
+
+        // Pasamos las categorías a la vista
+        return view('gastos.create', compact('categorias'));
     }
 
         public function store(Request $request)
@@ -30,20 +36,22 @@ class GastoController extends Controller
 
 
      // Muestra la lista de todos los gastos registrados
-        public function index()
+        public function index(Request $request)
      {
-         // Obtén todos los gastos ordenados por fecha descendente
-         $gastos = Gasto::orderBy('fecha', 'desc')->get();
+         $query = Gasto::query();
      
-         // Calcula el total de todos los gastos
-         $total = Gasto::sum('monto');
+         if ($request->filled('categoria')) {
+             $query->where('categoria', $request->categoria);
+         }
      
-         // Calcula los totales por categoría
-         $totalesPorCategoria = Gasto::selectRaw('categoria, sum(monto) as total')
-                                     ->groupBy('categoria')
-                                     ->get();
+         if ($request->filled('fecha_inicio') && $request->filled('fecha_fin')) {
+             $query->whereBetween('fecha', [$request->fecha_inicio, $request->fecha_fin]);
+         }
      
-         // Devuelve la vista con los gastos, el total general y los totales por categoría
+         $gastos = $query->orderBy('fecha', 'desc')->get();
+         $total = $gastos->sum('monto');
+         $totalesPorCategoria = $gastos->groupBy('categoria')->map->sum('monto');
+     
          return view('gastos.index', compact('gastos', 'total', 'totalesPorCategoria'));
      }
      
@@ -96,7 +104,14 @@ class GastoController extends Controller
         $gasto->delete();
         return redirect()->route('gastos.index');
     }
+public function show($id)
+{
+    // Buscar el gasto con el ID proporcionado
+    $gasto = Gasto::findOrFail($id);
 
+    // Retornar la vista con el gasto encontrado
+    return view('gastos.show', compact('gasto'));
+}
 
 
 }

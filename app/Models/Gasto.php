@@ -9,11 +9,5 @@ class Gasto extends Model
 {
     use HasFactory;
 
-    // Los atributos que pueden ser asignados de manera masiva
-    protected $fillable = [
-        'descripcion',
-        'monto',
-        'categoria',
-        'fecha',
-    ];
+    protected $fillable = ['descripcion', 'monto', 'categoria', 'fecha'];
 }
